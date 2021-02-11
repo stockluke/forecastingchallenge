@@ -3,30 +3,15 @@ import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request
 from forecastingchallenge import app, db, bcrypt
-from forecastingchallenge.forms import RegistrationForm, LoginForm, UpdateAccountForm
+from forecastingchallenge.forms import RegistrationForm, LoginForm, UpdateAccountForm, AnnouncementForm
 from forecastingchallenge.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
-
-
-posts = [
-    {
-        'key1': 'data1',
-        'key2': 'data2',
-        'key3': 'data3',
-        'key4': 'data4'
-    },
-    {
-        'key1': 'data5',
-        'key2': 'data6',
-        'key3': 'data7',
-        'key4': 'data8'
-    }
-]
 
 
 @app.route('/')
 @app.route('/home')
 def home():
+    posts = Post.query.all()
     return render_template('home.html', posts=posts)
 
 
@@ -82,7 +67,7 @@ def save_picture(form_picture):
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_filename = random_hex + f_ext
     picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_filename)
-
+    ################################# need to account for aspect ratio
     output_size = (125, 125)
     i = Image.open(form_picture)
     i.thumbnail(output_size)
@@ -91,14 +76,20 @@ def save_picture(form_picture):
     return picture_filename
 
 
+def delete_picture(picture_filename):
+    picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_filename)
+    os.remove(picture_path)
+
+
 @app.route("/account", methods=['GET', 'POST'])
 @login_required
 def account():
     form = UpdateAccountForm()
     if form.validate_on_submit():
         if form.picture.data:
-            # remove old profile picture saved in folder
             picture_file = save_picture(form.picture.data)
+            if current_user.image_file != 'default.jpg':
+                delete_picture(current_user.image_file)
             current_user.image_file = picture_file
         current_user.username = form.username.data
         current_user.email = form.email.data
@@ -110,3 +101,16 @@ def account():
         form.email.data = current_user.email
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template('account.html', form=form, image_file=image_file)
+
+
+@app.route("/announcements/new", methods=['GET', 'POST'])
+@login_required
+def announcements_new():
+    form = AnnouncementForm()
+    if form.validate_on_submit():
+        post = Post(title=form.title.data, content=form.content.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash('Announcement successfully posted.', 'success')
+        return redirect(url_for('home'))
+    return render_template('announcements_new.html', form=form)
