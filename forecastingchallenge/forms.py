@@ -55,3 +55,21 @@ class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     content = TextAreaField('Content', validators=[DataRequired()])
     submit = SubmitField('Post')
+
+
+class RequestResetForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Request Password Reset')
+
+    # removed for security purposes
+    # def validate_email(self, email):
+    #     email = User.query.filter_by(email=email.data).first()
+    #     if email is None:
+    #         raise ValidationError('There is no account with that email. You must register first.')
+
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=6, max=20)])
+    confirm_password = PasswordField('Confirm Password',
+                                     validators=[DataRequired(), Length(min=6, max=20), EqualTo('password')])
+    submit = SubmitField('Reset Password')

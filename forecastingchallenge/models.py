@@ -1,5 +1,6 @@
 from datetime import datetime
-from forecastingchallenge import db, login_manager
+from itsdangerous import TimedJSONWebSignatureSerializer as TimedSignature
+from forecastingchallenge import db, login_manager, app
 from flask_login import UserMixin
 
 
@@ -16,6 +17,19 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     posts = db.relationship('Post', backref='author', lazy=True)
     forecasts = db.relationship('Forecast', backref='author', lazy=True)
+
+    def get_reset_token(self, expires_sec=1800):
+        ts = TimedSignature(app.config['SECRET_KEY'], expires_sec)
+        return ts.dumps({'user_id': self.id}).decode('utf-8')
+
+    @staticmethod
+    def verify_reset_token(token):
+        ts = TimedSignature(app.config['SECRET_KEY'])
+        try:
+            user_id = ts.loads(token)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"
@@ -36,7 +50,8 @@ class Location(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     location = db.Column(db.String(4), nullable=False)
     date_effective = db.Column(db.DateTime, nullable=False)
-    #forecasts = db.relationship('Forecast', backref='location', lazy=True)
+
+    # forecasts = db.relationship('Forecast', backref='location', lazy=True)
 
     def __repr__(self):
         return f"Post('{self.location}', '{self.date_effective}')"
@@ -47,7 +62,7 @@ class Forecast(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     date_predicting = db.Column(db.DateTime, nullable=False)
-    #location = db.Column(db.String(4), db.ForeignKey('location.id'), nullable=False)
+    # location = db.Column(db.String(4), db.ForeignKey('location.id'), nullable=False)
     temperature_high = db.Column(db.Integer, nullable=False)
     temperature_low = db.Column(db.Integer, nullable=False)
     wind_max = db.Column(db.Integer, nullable=False)
