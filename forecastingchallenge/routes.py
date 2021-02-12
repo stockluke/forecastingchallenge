@@ -153,7 +153,7 @@ def post_delete(post_id):
     flash('Your post has been deleted!', 'success')
     return redirect(url_for('home'))
 
-@app.route("/user/<str:username>")
+@app.route("/user/<string:username>")
 @login_required
 def user(username):
     page = request.args.get('page', 1, type=int)
