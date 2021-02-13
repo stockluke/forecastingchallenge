@@ -14,12 +14,14 @@ class RegistrationForm(FlaskForm):
                                      validators=[DataRequired(), Length(min=6, max=20), EqualTo('password')])
     submit = SubmitField('Sign Up')
 
-    def validate_username(self, username):
+    @staticmethod
+    def validate_username(username):
         user = User.query.filter_by(username=username.data).first()
         if user:
             raise ValidationError('That username is taken. Please choose a different username.')
 
-    def validate_email(self, email):
+    @staticmethod
+    def validate_email(email):
         email = User.query.filter_by(email=email.data).first()
         if email:
             raise ValidationError('That email is taken. Please choose a different email.')
@@ -38,13 +40,15 @@ class UpdateAccountForm(FlaskForm):
     picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Update')
 
-    def validate_username(self, username):
+    @staticmethod
+    def validate_username(username):
         if username.data != current_user.username:
             user = User.query.filter_by(username=username.data).first()
             if user:
                 raise ValidationError('That username is taken. Please choose a different username.')
 
-    def validate_email(self, email):
+    @staticmethod
+    def validate_email(email):
         if email.data != current_user.email:
             email = User.query.filter_by(email=email.data).first()
             if email:
