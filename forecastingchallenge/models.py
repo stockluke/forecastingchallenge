@@ -1,6 +1,7 @@
 from datetime import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer as TimedSignature
-from forecastingchallenge import db, login_manager, app
+from flask import current_app
+from forecastingchallenge import db, login_manager
 from flask_login import UserMixin
 
 
@@ -19,12 +20,12 @@ class User(db.Model, UserMixin):
     forecasts = db.relationship('Forecast', backref='author', lazy=True)
 
     def get_reset_token(self, expires_sec=1800):
-        ts = TimedSignature(app.config['SECRET_KEY'], expires_sec)
+        ts = TimedSignature(current_app.config['SECRET_KEY'], expires_sec)
         return ts.dumps({'user_id': self.id}).decode('utf-8')
 
     @staticmethod
     def verify_reset_token(token):
-        ts = TimedSignature(app.config['SECRET_KEY'])
+        ts = TimedSignature(current_app.config['SECRET_KEY'])
         try:
             user_id = ts.loads(token)['user_id']
         except:
