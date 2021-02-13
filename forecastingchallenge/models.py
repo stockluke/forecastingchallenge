@@ -28,7 +28,8 @@ class User(db.Model, UserMixin):
         ts = TimedSignature(current_app.config['SECRET_KEY'])
         try:
             user_id = ts.loads(token)['user_id']
-        except:
+        except Exception as e:
+            print(e)
             return None
         return User.query.get(user_id)
 
