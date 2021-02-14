@@ -8,7 +8,7 @@ class ForecastForm(FlaskForm):
                                    validators=[DataRequired(), NumberRange(min=-128, max=135)])
     temperature_high = IntegerField('High Temperature (°F)',
                                     validators=[DataRequired(), NumberRange(min=-128, max=135)])
-    wind_max = IntegerField('Max Wind Speed (knots)',
+    wind_max = IntegerField('Max Wind (knots)',
                             validators=[DataRequired(), NumberRange(min=0, max=200)])
     precipitation_chance = DecimalField('Precipitation Chance (0-1)',
                                         validators=[DataRequired(), NumberRange(min=0, max=1)])
