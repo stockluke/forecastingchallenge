@@ -1,4 +1,117 @@
 {% extends "layout.html" %}
 {% block content%}
-    <h1>About Page</h1>
+    <div class="content-section">
+        <form method="POST" action="" enctype="multipart/form-data">
+            <fieldset class="form-group">
+                <legend>Forecast for New Haven, CT</legend>
+                <div class="form-group">
+                    {{ form.temperature_low.label(class="form-control-label") }}
+                    {% if form.temperature_low.errors %}
+                        {{ form.temperature_low(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.temperature_low.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.temperature_low(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.temperature_high.label(class="form-control-label") }}
+                    {% if form.temperature_high.errors %}
+                        {{ form.temperature_high(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.temperature_high.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.temperature_high(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.wind_max.label(class="form-control-label") }}
+                    {% if form.wind_max.errors %}
+                        {{ form.wind_max(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.wind_max.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.wind_max(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.precipitation_chance.label(class="form-control-label") }}
+                    {% if form.precipitation_chance.errors %}
+                        {{ form.precipitation_chance(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.precipitation_chance.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.precipitation_chance(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.precipitation_amount_low.label(class="form-control-label") }}
+                    {% if form.precipitation_amount_low.errors %}
+                        {{ form.precipitation_amount_low(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.precipitation_amount_low.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.precipitation_amount_low(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.precipitation_amount_high.label(class="form-control-label") }}
+                    {% if form.precipitation_amount_high.errors %}
+                        {{ form.precipitation_amount_high(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.precipitation_amount_high.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.precipitation_amount_high(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.precipitation_chance_liquid.label(class="form-control-label") }}
+                    {% if form.precipitation_chance_liquid.errors %}
+                        {{ form.precipitation_chance_liquid(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.precipitation_chance_liquid.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.precipitation_chance_liquid(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.precipitation_chance_winter.label(class="form-control-label") }}
+                    {% if form.precipitation_chance_winter.errors %}
+                        {{ form.precipitation_chance_winter(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.precipitation_chance_winter.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.precipitation_chance_winter(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group d-flex justify-content-between">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
 {% endblock content %}
